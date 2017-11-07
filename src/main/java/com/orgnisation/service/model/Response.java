@@ -18,6 +18,11 @@ public class Response {
 		super();
 	}
 	
+	/**
+	 * Instantiates a new response.
+	 *
+	 * @param message the message
+	 */
 	public Response(String message) {
 		this.message = message;
 	}

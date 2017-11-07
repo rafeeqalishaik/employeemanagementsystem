@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * The Class Employee.
  *
- * @author Rafeeq Ali Shaik
  */
 @Document
 public class Employee {
