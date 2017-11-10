@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.orgnisation.service.model.CustomException;
 import com.orgnisation.service.model.Employee;
-import com.orgnisation.service.model.Response;
 import com.orgnisation.service.repository.EmployeeRepository;
 
 /**
@@ -34,14 +34,16 @@ public class EmployeeController {
      * Gets the all employees.
      *
      * @return the all employees
+     * @throws CustomException
      */
     @RequestMapping("/allEmployees")
-    public ResponseEntity<?> getAllEmployees() {
+    public ResponseEntity<?> getAllEmployees() throws CustomException {
 	List<Employee> employees = employeeRepository.findAll();
 	if (!employees.isEmpty()) {
-	    return new ResponseEntity<>(new Response(employees, "all employees"), HttpStatus.OK);
+	    return new ResponseEntity<>(employees, HttpStatus.OK);
 	} else {
-	    return new ResponseEntity<>(new Response("no employees for the request"), HttpStatus.INTERNAL_SERVER_ERROR);
+	    throw new CustomException(HttpStatus.BAD_REQUEST, "employees not found for request",
+		    "/employees/allEmployees");
 	}
     }
 
@@ -50,9 +52,10 @@ public class EmployeeController {
      *
      * @param employee
      *            the employee
+     * @throws CustomException
      */
     @RequestMapping(method = RequestMethod.POST, value = "/addEmployee")
-    public void addEmployee(@RequestBody Employee employee) {
+    public void addEmployee(@RequestBody Employee employee) throws CustomException {
 	if (employee != null)
 	    employeeRepository.save(employee);
     }
@@ -63,16 +66,16 @@ public class EmployeeController {
      * @param designation
      *            the designation
      * @return the employee by designation
+     * @throws CustomException
      */
     @RequestMapping("/getEmployeeByDesignation/{designation}")
-    public ResponseEntity<?> getEmployeeByDesignation(@PathVariable String designation) {
+    public ResponseEntity<?> getEmployeeByDesignation(@PathVariable String designation) throws CustomException {
 	List<Employee> employees = employeeRepository.getEmployeeByDesignation(designation);
 	if (!employees.isEmpty()) {
-	    return new ResponseEntity<>(new Response(employees, "list of employees with designation : " + designation),
-		    HttpStatus.OK);
+	    return new ResponseEntity<>(employees, HttpStatus.OK);
 	} else {
-	    return new ResponseEntity<>(new Response("no employees with designation : " + designation),
-		    HttpStatus.INTERNAL_SERVER_ERROR);
+	    throw new CustomException(HttpStatus.NOT_FOUND, "Employee not found for designation " + designation,
+		    "/employees/getEmployeeByDesignation");
 	}
     }
 
@@ -82,16 +85,16 @@ public class EmployeeController {
      * @param domain
      *            the domain
      * @return the employee by domain
+     * @throws CustomException
      */
     @RequestMapping("/getEmployeeByDomain/{domain}")
-    public ResponseEntity<?> getEmployeeByDomain(@PathVariable String domain) {
+    public ResponseEntity<?> getEmployeeByDomain(@PathVariable String domain) throws CustomException {
 	List<Employee> employees = employeeRepository.getEmployeeByDomain(domain);
 	if (!employees.isEmpty()) {
-	    return new ResponseEntity<>(new Response(employees, "list of employees with domain : " + domain),
-		    HttpStatus.OK);
+	    return new ResponseEntity<>(employees, HttpStatus.OK);
 	} else {
-	    return new ResponseEntity<>(new Response("no employees with domain : " + domain),
-		    HttpStatus.INTERNAL_SERVER_ERROR);
+	    throw new CustomException(HttpStatus.NOT_FOUND, "Employee not found for domain " + domain,
+		    "/employees/getEmployeeByDomain");
 	}
     }
 
@@ -100,9 +103,10 @@ public class EmployeeController {
      *
      * @param employeeName
      *            the employee name
+     * @throws CustomException
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/deleteEmployee/{employeeName}")
-    public void deleteEmployeeByEmployeeName(@PathVariable String employeeName) {
+    public void deleteEmployeeByEmployeeName(@PathVariable String employeeName) throws CustomException {
 	if (employeeName != null)
 	    employeeRepository.deleteEmployeeByEmployeeName(employeeName);
     }
@@ -113,7 +117,7 @@ public class EmployeeController {
      * @param employee
      *            the employee
      */
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT, value="/updateEmployee")
     public void updateEmployee(@RequestBody Employee employee) {
 	if (employee != null)
 	    employeeRepository.save(employee);

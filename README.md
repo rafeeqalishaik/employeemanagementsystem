@@ -42,3 +42,11 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/common-applicatio
 2. clone project to your local machine and import into IDE workspace.
 3. Now run the EmployeeManagementSystem.java from main menu run.
 4. Check the working functionality of the application using postman.
+
+#END-POINTS
+1. List all employees - /employees/allEmployees
+2. Add employee - /employees/addEmployee
+3. Update an employee - /employees/updateEmployee
+4. List employee by designation - /employees/getEmployeeByDesignation/{designation}
+5. List employee by domain - /employees/getEmployeeByDomain/{domain}
+6. List employee by employeeName - /employees/deleteEmployee/{employeeName}
